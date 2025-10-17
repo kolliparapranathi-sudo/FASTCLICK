@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fast Click Challenge</title> <!-- Changed website title -->
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(to right, #f0f0f0, #d0f0ff);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+    }
+
+    h1 {
+        color: #333;
+    }
+
+    #gameArea {
+        position: relative;
+        width: 500px;
+        height: 300px;
+        border: 2px solid #333;
+        background-color: #fff;
+        margin-top: 20px;
+        overflow: hidden;
+        border-radius: 10px;
+    }
+
+    #clickBtn {
+        position: absolute;
+        padding: 15px 25px;
+        background-color: #ff6347;
+        border: none;
+        border-radius: 8px;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+
+    #clickBtn:active {
+        transform: scale(0.9);
+    }
+
+    #scoreBoard {
+        margin-top: 20px;
+        font-size: 20px;
+        color: #333;
+    }
+
+    #startBtn {
+        margin-top: 20px;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 8px;
+        border: none;
+        background-color: #4CAF50;
+        color: white;
+    }
+</style>
+</head>
+<body>
+
+<h1>Fast Click Challenge</h1> <!-- Changed website/game name -->
+<div id="gameArea">
+    <button id="clickBtn">Click Me!</button>
+</div>
+
+<div id="scoreBoard">Score: 0 | Time: 30s</div>
+<button id="startBtn">Start Game</button>
+
+<script>
+    const clickBtn = document.getElementById("clickBtn");
+    const scoreBoard = document.getElementById("scoreBoard");
+    const startBtn = document.getElementById("startBtn");
+    const gameArea = document.getElementById("gameArea");
+
+    let score = 0;
+    let timeLeft = 30;
+    let timerInterval;
+    let gameActive = false;
+
+    function moveButton() {
+        const maxX = gameArea.clientWidth - clickBtn.offsetWidth;
+        const maxY = gameArea.clientHeight - clickBtn.offsetHeight;
+
+        const randomX = Math.floor(Math.random() * maxX);
+        const randomY = Math.floor(Math.random() * maxY);
+
+        clickBtn.style.left = randomX + "px";
+        clickBtn.style.top = randomY + "px";
+    }
+
+    function updateScoreBoard() {
+        scoreBoard.textContent = `Score: ${score} | Time: ${timeLeft}s`;
+    }
+
+    function startGame() {
+        score = 0;
+        timeLeft = 30;
+        gameActive = true;
+        updateScoreBoard();
+        moveButton();
+        clickBtn.style.display = "block";
+
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            updateScoreBoard();
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                gameActive = false;
+                clickBtn.style.display = "none";
+                alert(`Game Over! Your final score is: ${score}`);
+            }
+        }, 1000);
+    }
+
+    clickBtn.addEventListener("click", () => {
+        if (!gameActive) return;
+        score++;
+        moveButton();
+        updateScoreBoard();
+    });
+
+    startBtn.addEventListener("click", startGame);
+
+    clickBtn.style.display = "none"; // Initially hide the button
+</script>
+
+</body>
+</html>
